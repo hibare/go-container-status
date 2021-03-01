@@ -6,12 +6,32 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/client"
 	"github.com/gorilla/mux"
+	"github.com/joho/godotenv"
 )
+
+var (
+	listenAddr string
+	listenPort string
+)
+
+func init() {
+  err := godotenv.Load(".env")
+
+  if err != nil {
+    log.Fatalf("Error loading .env file")
+  }
+
+  listenAddr = os.Getenv("LISTEN_ADDR")
+  listenPort = os.Getenv("LISTEN_PORT")
+}
+
+
 
 // Container data holder
 type Container struct {
@@ -119,14 +139,22 @@ func ping(w http.ResponseWriter, r *http.Request) {
 
 func handleRequests() {
 	r := mux.NewRouter().StrictSlash(true)
-	r.HandleFunc("/", home).Methods("GET")
-	r.HandleFunc("/container/{container}/status/", containerStatus).Methods("GET")
+	r.HandleFunc("/", authMiddleware(http.HandlerFunc(home))).Methods("GET")
+	r.HandleFunc("/container/{container}/status/", authMiddleware(http.HandlerFunc(containerStatus))).Methods("GET")
 	r.HandleFunc("/ping/", ping).Methods("GET")
 
-	log.Fatal(http.ListenAndServe("0.0.0.0:5000", r))
+	log.Fatal(http.ListenAndServe(listenAddr+":"+listenPort, r))
+}
+
+func authMiddleware(next http.Handler) http.HandlerFunc {
+	return http.HandlerFunc(func (w http.ResponseWriter, r *http.Request){
+		log.Println("Auth middleware")
+		log.Printf("Client: [%s] %s\n", r.RemoteAddr, r.RequestURI)
+		next.ServeHTTP(w, r)
+	})
 }
 
 func main() {
-	fmt.Println("Starting")
+	log.Printf("Listening for address %s on port %s\n", listenAddr, listenPort)
 	handleRequests()
 }
