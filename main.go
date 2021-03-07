@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/filters"
@@ -18,6 +19,7 @@ import (
 var (
 	listenAddr string
 	listenPort string
+	apiKeys []string
 )
 
 func init() {
@@ -29,6 +31,8 @@ func init() {
 
   listenAddr = os.Getenv("LISTEN_ADDR")
   listenPort = os.Getenv("LISTEN_PORT")
+  apiKeys = strings.Split(os.Getenv("API_KEYS"), ",")
+  log.Printf("Found %v API keys", len(apiKeys))
 }
 
 
@@ -148,13 +152,29 @@ func handleRequests() {
 
 func authMiddleware(next http.Handler) http.HandlerFunc {
 	return http.HandlerFunc(func (w http.ResponseWriter, r *http.Request){
-		log.Println("Auth middleware")
 		log.Printf("Client: [%s] %s\n", r.RemoteAddr, r.RequestURI)
-		next.ServeHTTP(w, r)
+		
+		apiKey := r.Header.Get("Authorization")
+		
+		if stringInSlice(apiKey, apiKeys){
+			next.ServeHTTP(w, r)
+			return
+		}
+
+		http.Error(w, "Forbidden", http.StatusForbidden)
 	})
 }
 
 func main() {
 	log.Printf("Listening for address %s on port %s\n", listenAddr, listenPort)
 	handleRequests()
+}
+
+func stringInSlice(a string, list []string) bool {
+    for _, b := range list {
+        if b == a {
+            return true
+        }
+    }
+    return false
 }
