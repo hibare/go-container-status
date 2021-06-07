@@ -6,6 +6,8 @@ services:
     image: go-container-status
     container_name: go-container-status
     hostname: go-container-status
+    volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - "5000:5000"
     logging:
