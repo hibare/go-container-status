@@ -20,7 +20,7 @@ services:
   go-container-status:
     build: 
         context: .
-    image: go-container-status
+    image: hibare/go-container-status
     container_name: go-container-status
     hostname: go-container-status
     environment: 
