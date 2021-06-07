@@ -6,36 +6,25 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
-	"strings"
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/client"
 	"github.com/gorilla/mux"
-	"github.com/joho/godotenv"
+	"github.com/hibare/util"
 )
 
 var (
-	listenAddr string
-	listenPort string
-	apiKeys []string
+	config struct{}
 )
 
 func init() {
-  err := godotenv.Load()
-
-  if err != nil {
-    log.Fatalf("Error loading .env file")
-  }
-
-  listenAddr = os.Getenv("LISTEN_ADDR")
-  listenPort = os.Getenv("LISTEN_PORT")
-  apiKeys = strings.Split(os.Getenv("API_KEYS"), ",")
-  log.Printf("Found %v API keys", len(apiKeys))
+	config, err := util.LoadConfig(".")
+	if err != nil {
+		log.Fatal("cannot load config:", err)
+	}
+	log.Printf("Found %v API keys", len(config.apiKeys))
 }
-
-
 
 // Container data holder
 type Container struct {
@@ -151,12 +140,12 @@ func handleRequests() {
 }
 
 func authMiddleware(next http.Handler) http.HandlerFunc {
-	return http.HandlerFunc(func (w http.ResponseWriter, r *http.Request){
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Client: [%s] %s\n", r.RemoteAddr, r.RequestURI)
-		
+
 		apiKey := r.Header.Get("Authorization")
-		
-		if stringInSlice(apiKey, apiKeys){
+
+		if stringInSlice(apiKey, apiKeys) {
 			next.ServeHTTP(w, r)
 			return
 		}
@@ -171,10 +160,10 @@ func main() {
 }
 
 func stringInSlice(a string, list []string) bool {
-    for _, b := range list {
-        if b == a {
-            return true
-        }
-    }
-    return false
+	for _, b := range list {
+		if b == a {
+			return true
+		}
+	}
+	return false
 }
