@@ -1,7 +1,7 @@
 FROM golang:1.14-alpine AS build
 
 WORKDIR /src/
-COPY main.go go.* /src/
+COPY . /src/
 RUN CGO_ENABLED=0 go build -o /bin/go_container_status
 
 FROM scratch

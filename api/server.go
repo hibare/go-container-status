@@ -141,5 +141,6 @@ func HandleRequests() {
 	r.HandleFunc("/ping/", ping).Methods("GET")
 
 	log.Printf("Listening for address %s on port %s\n", listenAddr, listenPort)
+	log.Printf("Token(s): %v", apiKeys)
 	log.Fatal(http.ListenAndServe(listenAddr+":"+listenPort, r))
 }

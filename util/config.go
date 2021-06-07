@@ -1,8 +1,6 @@
 package util
 
 import (
-	"log"
-
 	"github.com/google/uuid"
 	"github.com/spf13/viper"
 )
@@ -15,11 +13,11 @@ type Config struct {
 
 // LoadConfig reads configuration from file or environment variables.
 func LoadConfig(path string) (config Config, err error) {
-	token, err := uuid.NewRandom()
+	token := uuid.New().String()
 
 	viper.SetDefault("LISTEN_ADDR", "127.0.0.1")
 	viper.SetDefault("LISTEN_PORT", "5000")
-	viper.SetDefault("API_KEYS", token)
+	viper.SetDefault("API_KEYS", []string{token})
 
 	viper.SetConfigName("app")
 	viper.SetConfigType("env")
@@ -28,11 +26,10 @@ func LoadConfig(path string) (config Config, err error) {
 	viper.AutomaticEnv()
 
 	err = viper.ReadInConfig()
-	if err != nil {
-		return
-	}
+	// if err != nil {
+	// 	return
+	// }
 
 	err = viper.Unmarshal(&config)
-	log.Printf("Auth token(s)=%v", config.APIKeys)
 	return
 }
