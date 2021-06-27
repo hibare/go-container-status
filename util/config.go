@@ -5,6 +5,7 @@ import (
 	"github.com/spf13/viper"
 )
 
+// Config for App
 type Config struct {
 	ListenAddr string   `mapstructure:"LISTEN_ADDR"`
 	ListenPort string   `mapstructure:"LISTEN_PORT"`
