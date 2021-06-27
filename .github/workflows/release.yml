@@ -15,13 +15,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Prepare
-        id: prep
-        run: |
-          DOCKER_IMAGE=hibare/go-container-status
-          VERSION=latest
-          TAGS="${DOCKER_IMAGE}:${VERSION}"
-          echo ::set-output name=tags::${TAGS}
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          # list of Docker images to use as base name for tags
+          images: |
+            hibare/go-container-status
+          # generate Docker tags based on the following events/attributes
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
         with:
@@ -38,6 +44,7 @@ jobs:
           key: ${{ runner.os }}-buildx-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-buildx-
+     
       - name: Login to DockerHub
         if: github.event_name != 'pull_request'
         uses: docker/login-action@v1
@@ -52,7 +59,7 @@ jobs:
           builder: ${{ steps.buildx.outputs.name }}
           platforms: linux/386,linux/amd64,linux/arm/v7,linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.prep.outputs.tags }}
+          tags: ${{ steps.meta.outputs.tags }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
 
