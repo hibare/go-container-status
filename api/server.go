@@ -134,7 +134,7 @@ func home(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Good to see you")
 }
 
-// HandleRequests: API request handler
+// HandleRequests : API request handler
 func HandleRequests() {
 	r := mux.NewRouter().StrictSlash(true)
 	r.HandleFunc("/", authMiddleware(http.HandlerFunc(home))).Methods("GET")
