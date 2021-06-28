@@ -5,12 +5,9 @@ on: [pull_request, issues]
 jobs:
   greeting:
     runs-on: ubuntu-latest
-    permissions:
-      issues: write
-      pull-requests: write
     steps:
     - uses: actions/first-interaction@v1
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
-        issue-message: 'Message that will be displayed on users first issue'
-        pr-message: 'Message that will be displayed on users first pull request'
+        issue-message: 'Thank you for submitting an issue. Issue will be reviewed and acted upon soon'
+        pr-message: 'Thank you for submittng PR. PR will be reviewed and merged'
