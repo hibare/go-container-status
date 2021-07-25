@@ -6,6 +6,9 @@
 [![Docker Hub](https://img.shields.io/docker/pulls/hibare/go-container-status)](https://hub.docker.com/r/hibare/go-container-status)
 [![Docker image size](https://img.shields.io/docker/image-size/hibare/go-container-status/latest)](https://hub.docker.com/r/hibare/go-container-status) 
 [![GitHub issues](https://img.shields.io/github/issues/hibare/go-container-status)](https://github.com/hibare/go-container-status/issues)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/hibare/go-container-status)](https://github.com/hibare/go-container-status/pulls)
+[![GitHub](https://img.shields.io/github/license/hibare/go-container-status)](https://github.com/hibare/go-container-status/blob/main/LICENSE)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/hibare/go-container-status)](https://github.com/hibare/go-container-status/releases)
 
 
 A REST API designed in go to check for a container status
