@@ -29,15 +29,13 @@ docker run -p 5000:5000 -v /var/run/docker.sock:/var/run/docker.sock -e LISTEN_A
 version: "3"
 services:
   go-container-status:
-    build: 
-        context: .
     image: hibare/go-container-status
     container_name: go-container-status
     hostname: go-container-status
     environment: 
       - LISTEN_ADDR=0.0.0.0
     volumes:
-        - /var/run/docker.sock:/var/run/docker.sock
+        - /var/run/docker.sock:/var/run/docker.sock:ro
     ports:
       - "5000:5000"
     logging:
