@@ -1,8 +1,6 @@
 version: "3"
 services:
   go-container-status:
-    build: 
-        context: .
     image: hibare/go-container-status
     container_name: go-container-status
     hostname: go-container-status
