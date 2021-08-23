@@ -1,0 +1,19 @@
+version: "3"
+services:
+  go-container-status:
+    build: 
+        context: .
+    image: hibare/go-container-status
+    container_name: go-container-status
+    hostname: go-container-status
+    environment: 
+      - LISTEN_ADDR=0.0.0.0
+    volumes:
+        - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - "5000:5000"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "500k"
+        max-file: "5"
