@@ -10,6 +10,7 @@ services:
         - /var/run/docker.sock:/var/run/docker.sock:ro
     ports:
       - "5000:5000"
+    restart: always
     logging:
       driver: "json-file"
       options:
