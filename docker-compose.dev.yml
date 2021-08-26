@@ -1,6 +1,8 @@
 version: "3"
 services:
   go-container-status:
+    build: 
+        context: .
     image: hibare/go-container-status
     container_name: go-container-status
     hostname: go-container-status
@@ -10,7 +12,6 @@ services:
         - /var/run/docker.sock:/var/run/docker.sock:ro
     ports:
       - "5000:5000"
-    restart: always
     logging:
       driver: "json-file"
       options:
