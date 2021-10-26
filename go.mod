@@ -5,7 +5,7 @@ go 1.15
 require (
 	github.com/Microsoft/go-winio v0.5.0 // indirect
 	github.com/containerd/containerd v1.5.7 // indirect
-	github.com/docker/docker v20.10.9+incompatible
+	github.com/docker/docker v20.10.10+incompatible
 	github.com/docker/go-connections v0.4.0 // indirect
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/mux v1.8.0
