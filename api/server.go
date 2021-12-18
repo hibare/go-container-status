@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/filters"
@@ -54,7 +55,8 @@ func containerStatus(w http.ResponseWriter, r *http.Request) {
 	containerFavorableConditions := FavorableConditions{"running", "healthy"}
 	params := mux.Vars(r)
 
-	containerName := params["container"]
+	containerName := strings.Replace(params["container"], "\n", "", -1)
+	containerName = strings.Replace(containerName, "\r", "", -1)
 
 	log.Printf("Checking status for container %s", containerName)
 
