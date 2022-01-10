@@ -1,4 +1,4 @@
-FROM golang:1.17.5-alpine AS base
+FROM golang:1.17.6-alpine AS base
 
 # Build golang healthcheck binary
 FROM base AS healthcheck
