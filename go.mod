@@ -16,7 +16,7 @@ require (
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.0.2 // indirect
 	github.com/sirupsen/logrus v1.8.1 // indirect
-	github.com/spf13/viper v1.12.0
+	github.com/spf13/viper v1.13.0
 	golang.org/x/time v0.0.0-20210723032227-1f47c861a9ac // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gotest.tools/v3 v3.0.3 // indirect
