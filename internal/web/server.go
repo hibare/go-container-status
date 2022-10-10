@@ -1,4 +1,4 @@
-package api
+package web
 
 import (
 	"context"
@@ -12,7 +12,7 @@ import (
 	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/client"
 	"github.com/gorilla/mux"
-	"github.com/hibare/go-container-status/util"
+	"github.com/hibare/go-container-status/internal/config"
 )
 
 var (
@@ -21,7 +21,7 @@ var (
 )
 
 func init() {
-	config, err := util.LoadConfig(".")
+	config, err := config.LoadConfig(".")
 	if err != nil {
 		log.Fatal("cannot load config: ", err)
 	}
