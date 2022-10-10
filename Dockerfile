@@ -19,7 +19,7 @@ WORKDIR /src/
 
 COPY . /src/
 
-RUN CGO_ENABLED=0 go build -o /bin/go_container_status
+RUN CGO_ENABLED=0 go build -o /bin/go_container_status ./cmd/go-container-status/main.go
 
 # Generate final image
 FROM scratch

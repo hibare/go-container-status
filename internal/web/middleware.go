@@ -1,10 +1,11 @@
-package api
+package web
 
 import (
 	"log"
 	"net/http"
 
-	"github.com/hibare/go-container-status/util"
+	"github.com/hibare/go-container-status/internal/config"
+	"github.com/hibare/go-container-status/internal/util"
 )
 
 var (
@@ -12,7 +13,7 @@ var (
 )
 
 func init() {
-	config, err := util.LoadConfig(".")
+	config, err := config.LoadConfig(".")
 
 	if err != nil {
 		log.Fatal("cannot load config: ", err)
