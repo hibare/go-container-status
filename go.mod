@@ -3,7 +3,7 @@ module github.com/hibare/go-container-status
 go 1.19
 
 require (
-	github.com/docker/docker v20.10.22+incompatible
+	github.com/docker/docker v20.10.23+incompatible
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/mux v1.8.0
 	github.com/spf13/viper v1.14.0
