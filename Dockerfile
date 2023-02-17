@@ -1,6 +1,5 @@
 FROM golang:1.20.0-alpine AS base
 
-
 # Build golang healthcheck binary
 FROM base AS healthcheck
 
