@@ -1,17 +1,19 @@
 version: "3"
+
 services:
   go-container-status:
-    build: 
-        context: .
-    image: hibare/go-container-status
+    image: cosmtrek/air
     container_name: go-container-status
     hostname: go-container-status
-    environment: 
-      - LISTEN_ADDR=0.0.0.0
+    working_dir: /app
+    user: ${HOST_UID}:${HOST_GID}
+    command: -c air.toml
+    env_file:
+      - .env
     volumes:
-        - /var/run/docker.sock:/var/run/docker.sock:ro
-    ports:
-      - "5000:5000"
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./:/app
+    network_mode: host
     logging:
       driver: "json-file"
       options:
