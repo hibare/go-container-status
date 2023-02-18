@@ -39,13 +39,18 @@ func ContainerStatus(containerName string) ([]Container, error) {
 		log.Fatal(err)
 		return foundContainers, err
 	}
+	defer cli.Close()
 
 	cli.NegotiateAPIVersion(ctx)
 
-	containerFilter := filters.NewArgs()
-	containerFilter.Add("name", containerName)
+	options := types.ContainerListOptions{
+		All: true,
+		Filters: filters.NewArgs(
+			filters.Arg("name", containerName),
+		),
+	}
 
-	containers, err := cli.ContainerList(ctx, types.ContainerListOptions{All: true, Filters: containerFilter})
+	containers, err := cli.ContainerList(ctx, options)
 	if err != nil {
 		log.Fatal(err)
 		return foundContainers, err
