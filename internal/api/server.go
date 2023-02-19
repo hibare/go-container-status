@@ -30,12 +30,14 @@ func Serve() {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.Timeout(60 * time.Second))
+	r.Use(middleware.StripSlashes)
+	r.Use(middleware.CleanPath)
 
 	r.Get("/", home)
 	r.Get("/ping", handlers.HealthCheck)
 	r.Route("/container/{container}", func(r chi.Router) {
 		r.Use(middlewares.TokenAuth)
-		r.Get("/status/", handlers.ContainerStatus)
+		r.Get("/status", handlers.ContainerStatus)
 	})
 
 	srv := &http.Server{
