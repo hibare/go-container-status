@@ -33,3 +33,23 @@ func ContainerStatus(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 	}
 }
+
+func ContainerStatusAll(w http.ResponseWriter, r *http.Request) {
+	var httpStatus int
+
+	foundContainers, err := containers.ContainerStatusAll()
+
+	switch err {
+	case nil:
+		httpStatus = http.StatusOK
+	default:
+		httpStatus = http.StatusInternalServerError
+	}
+
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(httpStatus)
+
+	if err := json.NewEncoder(w).Encode(foundContainers); err != nil {
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	}
+}

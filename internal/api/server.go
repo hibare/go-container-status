@@ -39,6 +39,10 @@ func Serve() {
 		r.Use(middlewares.TokenAuth)
 		r.Get("/status", handlers.ContainerStatus)
 	})
+	r.Route("/containers", func(r chi.Router) {
+		r.Use(middlewares.TokenAuth)
+		r.Get("/", handlers.ContainerStatusAll)
+	})
 
 	srv := &http.Server{
 		Handler:      r,

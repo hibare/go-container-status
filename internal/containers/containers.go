@@ -73,3 +73,36 @@ func ContainerStatus(containerName string) ([]Container, error) {
 		return foundContainers, ErrNoContainersFound
 	}
 }
+
+func ContainerStatusAll() ([]Container, error) {
+	ctx := context.Background()
+	foundContainers := []Container{}
+
+	cli, err := client.NewClientWithOpts(client.WithAPIVersionNegotiation())
+	if err != nil {
+		log.Error(err)
+		return foundContainers, err
+	}
+	defer cli.Close()
+
+	options := types.ContainerListOptions{
+		All: true,
+	}
+
+	containers, err := cli.ContainerList(ctx, options)
+	if err != nil {
+		log.Error(err)
+		return foundContainers, err
+	}
+
+	for _, container := range containers {
+		foundContainers = append(foundContainers, Container{
+			Name:   container.Names,
+			State:  container.State,
+			Status: container.Status,
+			Image:  container.Image,
+		})
+	}
+
+	return foundContainers, nil
+}
