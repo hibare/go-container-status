@@ -9,20 +9,21 @@ import (
 )
 
 func ContainerStatus(w http.ResponseWriter, r *http.Request) {
+	var httpStatus int
 
 	containerName := chi.URLParam(r, "container")
 
 	foundContainers, err := containers.ContainerStatus(containerName)
 
-	httpStatus := http.StatusOK
-
-	if err != nil {
-		switch err.Error() {
-		case containers.ErrUnhealthyContainers:
-			httpStatus = http.StatusInternalServerError
-		case containers.ErrNoContainersFound:
-			httpStatus = http.StatusNotFound
-		}
+	switch err {
+	case nil:
+		httpStatus = http.StatusOK
+	case containers.ErrUnhealthyContainers:
+		httpStatus = http.StatusInternalServerError
+	case containers.ErrNoContainersFound:
+		httpStatus = http.StatusNotFound
+	default:
+		httpStatus = http.StatusInternalServerError
 	}
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")

@@ -2,19 +2,13 @@ package containers
 
 import (
 	"context"
-	"errors"
-	"log"
 	"strings"
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/client"
 	"github.com/hibare/go-container-status/internal/utils"
-)
-
-var (
-	ErrUnhealthyContainers = "unhealthy containers found"
-	ErrNoContainersFound   = "no containers found"
+	log "github.com/sirupsen/logrus"
 )
 
 type Container struct {
@@ -32,16 +26,14 @@ func ContainerStatus(containerName string) ([]Container, error) {
 	containerName = strings.Replace(containerName, "\n", "", -1)
 	containerName = strings.Replace(containerName, "\r", "", -1)
 
-	log.Printf("Checking status for container %s", containerName)
+	log.Infof("Checking status for container %s", containerName)
 
-	cli, err := client.NewClientWithOpts()
+	cli, err := client.NewClientWithOpts(client.WithAPIVersionNegotiation())
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
 		return foundContainers, err
 	}
 	defer cli.Close()
-
-	cli.NegotiateAPIVersion(ctx)
 
 	options := types.ContainerListOptions{
 		All: true,
@@ -52,7 +44,7 @@ func ContainerStatus(containerName string) ([]Container, error) {
 
 	containers, err := cli.ContainerList(ctx, options)
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
 		return foundContainers, err
 	}
 
@@ -73,11 +65,11 @@ func ContainerStatus(containerName string) ([]Container, error) {
 		}
 
 		if unhealthyContainers {
-			return foundContainers, errors.New(ErrUnhealthyContainers)
+			return foundContainers, ErrUnhealthyContainers
 		} else {
 			return foundContainers, nil
 		}
 	} else {
-		return foundContainers, errors.New(ErrNoContainersFound)
+		return foundContainers, ErrNoContainersFound
 	}
 }

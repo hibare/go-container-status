@@ -3,7 +3,6 @@ package api
 import (
 	"context"
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 	"os/signal"
@@ -14,6 +13,7 @@ import (
 	"github.com/hibare/go-container-status/internal/api/handlers"
 	"github.com/hibare/go-container-status/internal/api/middlewares"
 	"github.com/hibare/go-container-status/internal/config"
+	log "github.com/sirupsen/logrus"
 )
 
 func home(w http.ResponseWriter, r *http.Request) {
@@ -48,13 +48,13 @@ func Serve() {
 		IdleTimeout:  time.Second * 60,
 	}
 
-	log.Printf("Listening for address %s on port %d\n", config.Current.ListenAddr, config.Current.ListenPort)
+	log.Infof("Listening for address %s on port %d\n", config.Current.ListenAddr, config.Current.ListenPort)
 
-	log.Printf("Token(s): %v", config.Current.APIKeys)
+	log.Infof("Token(s): %v", config.Current.APIKeys)
 	// Run our server in a goroutine so that it doesn't block.
 	go func() {
 		if err := srv.ListenAndServe(); err != nil {
-			log.Println(err)
+			log.Error(err)
 		}
 	}()
 
