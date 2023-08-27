@@ -1,7 +1,6 @@
 package middlewares
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/hibare/go-container-status/internal/config"
@@ -10,7 +9,6 @@ import (
 
 func TokenAuth(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		log.Printf("Client: [%s] %s\n", r.RemoteAddr, r.RequestURI)
 
 		apiKey := r.Header.Get("Authorization")
 

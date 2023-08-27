@@ -3,7 +3,7 @@ SHELL=/bin/bash
 UI := $(shell id -u)
 GID := $(shell id -g)
 MAKEFLAGS += -s
-DOCKER_COMPOSE_PREFIX = HOST_UID=${UID} HOST_GID=${GID} docker-compose -f docker-compose.dev.yml
+DOCKER_COMPOSE_PREFIX = HOST_UID=${UID} HOST_GID=${GID} docker compose -f docker-compose.dev.yml
 
 all: app-up
 
