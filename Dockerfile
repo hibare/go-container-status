@@ -1,18 +1,13 @@
 FROM golang:1.21.6-alpine AS base
 
-# Build golang healthcheck binary
-FROM base AS healthcheck
-
-ARG VERSION=0.1.0
-
-RUN wget -O - https://github.com/hibare/go-docker-healthcheck/archive/refs/tags/v${VERSION}.tar.gz |  tar zxf -
-
-WORKDIR /go/go-docker-healthcheck-${VERSION}
-
-RUN CGO_ENABLED=0 go build -o /bin/healthcheck
-
 # Build main app
 FROM base AS build
+
+# Install healthcheck cmd
+RUN apk update \
+    && apk add curl \
+    && apk add cosign \
+    && curl -sfL https://raw.githubusercontent.com/hibare/go-docker-healthcheck/main/install.sh | sh -s -- -d -v -b /usr/local/bin
 
 WORKDIR /src/
 
@@ -30,7 +25,7 @@ COPY --from=healthcheck /bin/healthcheck /bin/healthcheck
 HEALTHCHECK \
     --interval=30s \
     --timeout=3s \
-    CMD ["healthcheck","http://localhost:5000/ping/"]
+    CMD ["healthcheck", "--url", "http://localhost:5000/ping/"]
 
 EXPOSE 5000
 
