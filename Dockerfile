@@ -13,14 +13,14 @@ WORKDIR /src/
 
 COPY . /src/
 
-RUN CGO_ENABLED=0 go build -o /bin/go_container_status ./cmd/go-container-status/main.go
+RUN CGO_ENABLED=0 go build -o /usr/local/bin/go_container_status ./cmd/go-container-status/main.go
 
 # Generate final image
 FROM scratch
 
-COPY --from=build /bin/go_container_status /bin/go_container_status
+COPY --from=build /usr/local/bin/go_container_status /bin/go_container_status
 
-COPY --from=healthcheck /bin/healthcheck /bin/healthcheck
+COPY --from=build /usr/local/bin/healthcheck /bin/healthcheck
 
 HEALTHCHECK \
     --interval=30s \
