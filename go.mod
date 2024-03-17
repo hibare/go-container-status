@@ -3,7 +3,7 @@ module github.com/hibare/go-container-status
 go 1.21
 
 require (
-	github.com/docker/docker v25.0.3+incompatible
+	github.com/docker/docker v25.0.4+incompatible
 	github.com/go-chi/chi/v5 v5.0.12
 	github.com/google/uuid v1.6.0
 	github.com/joho/godotenv v1.5.1
