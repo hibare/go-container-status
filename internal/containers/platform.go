@@ -3,11 +3,11 @@ package containers
 import (
 	"context"
 	"fmt"
+	"log/slog"
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
 	"github.com/pkg/errors"
-	log "github.com/sirupsen/logrus"
 )
 
 type ContainerPlatform string
@@ -23,7 +23,7 @@ func DetermineContainerPlatform(cli *client.Client) (ContainerPlatform, error) {
 	info, err := cli.Info(ctx)
 	if err != nil {
 		if client.IsErrConnectionFailed(err) {
-			log.Warn(err)
+			slog.Warn("Failed to connect to docker daemon")
 			return "", nil
 		}
 
@@ -42,7 +42,7 @@ func PlatformPreChecks() error {
 
 	cli, err := getClient()
 	if err != nil {
-		log.Error(err)
+		slog.Error("Error creating docker client", "error", err)
 		return ErrClientGet
 	}
 
@@ -54,20 +54,20 @@ func PlatformPreChecks() error {
 	}
 
 	if platform == PlatformDockerStandalone {
-		log.Info("Docker is running in standalone mode")
+		slog.Info("Docker is running in standalone mode")
 		return nil
 	}
 
 	if platform == PlatformDockerSwarm {
 		info, err := cli.Info(ctx)
 		if err != nil {
-			log.Error(err)
+			slog.Error("Error fetching docker info", "error", err)
 			return ErrClientInfo
 		}
 
 		node, _, err := cli.NodeInspectWithRaw(ctx, info.Swarm.NodeID)
 		if err != nil {
-			log.Error(err)
+			slog.Error("Error inspecting docker node", "error", err)
 			return ErrNodeInspect
 		}
 
@@ -75,7 +75,7 @@ func PlatformPreChecks() error {
 			return ErrNoSwarmManager
 		}
 
-		log.Info("Docker is running in swarm mode")
+		slog.Info("Docker is running in swarm mode")
 		return nil
 	}
 

@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"os"
 	"os/signal"
@@ -10,10 +11,10 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	commonHandler "github.com/hibare/GoCommon/v2/pkg/http/handler"
+	commonMiddleware "github.com/hibare/GoCommon/v2/pkg/http/middleware"
 	"github.com/hibare/go-container-status/internal/api/handlers"
-	"github.com/hibare/go-container-status/internal/api/middlewares"
 	"github.com/hibare/go-container-status/internal/config"
-	log "github.com/sirupsen/logrus"
 )
 
 func home(w http.ResponseWriter, r *http.Request) {
@@ -22,7 +23,7 @@ func home(w http.ResponseWriter, r *http.Request) {
 
 func Serve() {
 	wait := time.Second * 15
-	addr := fmt.Sprintf("%s:%d", config.Current.ListenAddr, config.Current.ListenPort)
+	addr := fmt.Sprintf("%s:%d", config.Current.API.ListenAddr, config.Current.API.ListenPort)
 
 	r := chi.NewRouter()
 	r.Use(middleware.RequestID)
@@ -34,13 +35,17 @@ func Serve() {
 	r.Use(middleware.CleanPath)
 
 	r.Get("/", home)
-	r.Get("/ping", handlers.HealthCheck)
+	r.Get("/ping", commonHandler.HealthCheck)
 	r.Route("/container/{container}", func(r chi.Router) {
-		r.Use(middlewares.TokenAuth)
+		r.Use(func(h http.Handler) http.Handler {
+			return commonMiddleware.TokenAuth(h, config.Current.API.APIKeys)
+		})
 		r.Get("/status", handlers.ContainerStatus)
 	})
 	r.Route("/containers", func(r chi.Router) {
-		r.Use(middlewares.TokenAuth)
+		r.Use(func(h http.Handler) http.Handler {
+			return commonMiddleware.TokenAuth(h, config.Current.API.APIKeys)
+		})
 		r.Get("/", handlers.ContainerStatusAll)
 	})
 
@@ -52,13 +57,12 @@ func Serve() {
 		IdleTimeout:  time.Second * 60,
 	}
 
-	log.Infof("Listening for address %s on port %d\n", config.Current.ListenAddr, config.Current.ListenPort)
+	slog.Info("Starting Server", "addr", addr)
 
-	log.Infof("Token(s): %v", config.Current.APIKeys)
 	// Run our server in a goroutine so that it doesn't block.
 	go func() {
 		if err := srv.ListenAndServe(); err != nil {
-			log.Error(err)
+			slog.Error("listen and serve", "err", err)
 		}
 	}()
 
