@@ -4,11 +4,12 @@ import (
 	"context"
 	"strings"
 
+	"log/slog"
+
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/client"
-	"github.com/hibare/go-container-status/internal/utils"
-	log "github.com/sirupsen/logrus"
+	"github.com/hibare/GoCommon/v2/pkg/slice"
 )
 
 type Container struct {
@@ -26,11 +27,11 @@ func ContainerStatus(containerName string) ([]Container, error) {
 	containerName = strings.Replace(containerName, "\n", "", -1)
 	containerName = strings.Replace(containerName, "\r", "", -1)
 
-	log.Infof("Checking status for container %s", containerName)
+	slog.Info("Checking status for container", "container", containerName)
 
 	cli, err := client.NewClientWithOpts(client.WithAPIVersionNegotiation())
 	if err != nil {
-		log.Error(err)
+		slog.Error("Error creating docker client", "error", err)
 		return foundContainers, err
 	}
 	defer cli.Close()
@@ -44,7 +45,7 @@ func ContainerStatus(containerName string) ([]Container, error) {
 
 	containers, err := cli.ContainerList(ctx, options)
 	if err != nil {
-		log.Error(err)
+		slog.Error("Error listing containers", "error", err)
 		return foundContainers, err
 	}
 
@@ -59,7 +60,7 @@ func ContainerStatus(containerName string) ([]Container, error) {
 				Image:  container.Image,
 			})
 
-			if !utils.SliceContains(container.State, containerFavorableConditions) {
+			if !slice.SliceContains(container.State, containerFavorableConditions) {
 				unhealthyContainers = true
 			}
 		}
@@ -80,7 +81,7 @@ func ContainerStatusAll() ([]Container, error) {
 
 	cli, err := client.NewClientWithOpts(client.WithAPIVersionNegotiation())
 	if err != nil {
-		log.Error(err)
+		slog.Error("Error creating docker client", "error", err)
 		return foundContainers, err
 	}
 	defer cli.Close()
@@ -91,7 +92,7 @@ func ContainerStatusAll() ([]Container, error) {
 
 	containers, err := cli.ContainerList(ctx, options)
 	if err != nil {
-		log.Error(err)
+		slog.Error("Error listing containers", "error", err)
 		return foundContainers, err
 	}
 
