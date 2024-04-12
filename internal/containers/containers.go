@@ -9,7 +9,7 @@ import (
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/client"
-	"github.com/hibare/go-container-status/internal/utils"
+	"github.com/hibare/GoCommon/v2/pkg/slice"
 )
 
 type Container struct {
@@ -60,7 +60,7 @@ func ContainerStatus(containerName string) ([]Container, error) {
 				Image:  container.Image,
 			})
 
-			if !utils.SliceContains(container.State, containerFavorableConditions) {
+			if !slice.SliceContains(container.State, containerFavorableConditions) {
 				unhealthyContainers = true
 			}
 		}
