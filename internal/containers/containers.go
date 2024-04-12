@@ -6,7 +6,7 @@ import (
 
 	"log/slog"
 
-	"github.com/docker/docker/api/types"
+	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/client"
 	"github.com/hibare/GoCommon/v2/pkg/slice"
@@ -36,7 +36,7 @@ func ContainerStatus(containerName string) ([]Container, error) {
 	}
 	defer cli.Close()
 
-	options := types.ContainerListOptions{
+	options := container.ListOptions{
 		All: true,
 		Filters: filters.NewArgs(
 			filters.Arg("name", containerName),
@@ -86,7 +86,7 @@ func ContainerStatusAll() ([]Container, error) {
 	}
 	defer cli.Close()
 
-	options := types.ContainerListOptions{
+	options := container.ListOptions{
 		All: true,
 	}
 
