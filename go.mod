@@ -6,7 +6,7 @@ require (
 	github.com/docker/docker v27.3.1+incompatible
 	github.com/go-chi/chi/v5 v5.1.0
 	github.com/google/uuid v1.6.0
-	github.com/hibare/GoCommon/v2 v2.18.0
+	github.com/hibare/GoCommon/v2 v2.19.0
 	github.com/pkg/errors v0.9.1
 )
 
