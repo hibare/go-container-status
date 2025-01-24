@@ -3,10 +3,10 @@ module github.com/hibare/go-container-status
 go 1.21
 
 require (
-	github.com/docker/docker v27.5.0+incompatible
+	github.com/docker/docker v27.5.1+incompatible
 	github.com/go-chi/chi/v5 v5.2.0
 	github.com/google/uuid v1.6.0
-	github.com/hibare/GoCommon/v2 v2.19.0
+	github.com/hibare/GoCommon/v2 v2.20.0
 	github.com/pkg/errors v0.9.1
 )
 
@@ -34,7 +34,7 @@ require (
 	go.opentelemetry.io/otel/sdk v1.22.0 // indirect
 	go.opentelemetry.io/otel/trace v1.22.0 // indirect
 	golang.org/x/net v0.23.0 // indirect
-	golang.org/x/sys v0.18.0 // indirect
+	golang.org/x/sys v0.28.0 // indirect
 	golang.org/x/time v0.1.0 // indirect
 	gotest.tools/v3 v3.0.3 // indirect
 )
