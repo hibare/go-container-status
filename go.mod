@@ -1,6 +1,7 @@
 module github.com/hibare/go-container-status
 
-go 1.21
+go 1.24.0
+
 require (
 	github.com/docker/docker v28.0.0+incompatible
 	github.com/go-chi/chi/v5 v5.2.1
