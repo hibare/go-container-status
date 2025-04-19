@@ -13,6 +13,10 @@
 
 A REST API designed in go to check for a container status
 
+> [!IMPORTANT]
+> This repository is no longer maintained and has been superseded by [ArguSwarm](https://github.com/hibare/ArguSwarm)
+
+
 ## Getting Started
 
 go-container-status is packaged as docker container. Docker image is available on [Docker Hub](https://hub.docker.com/r/hibare/go-container-status).
